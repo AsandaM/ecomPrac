@@ -5,6 +5,7 @@ function CreateItem(id, name, category, image, description, price) {
     this.image = image
     this.description = description
     this.price = price
+    this.quantity = 1
 }
 
 let item1 = new CreateItem(1, 'Apple iPhone', 'Electronics', 'https://ik.imagekit.io/3dqckpw4d/upload/iphone_12___Purple1657182290iphone-12-purple.png', 'Powerful. Beautiful. Durable.', 23999.99)
@@ -43,19 +44,35 @@ let btns = document.querySelectorAll('.purchase')
 //     })
 // })
 
-function addToCart(id) {
-    let [item] = items.filter(object=> object.id === +id) //+id converts it into a number
-    purchasedItems.push(item)
-    console.log(purchasedItems);
+// function addToCart(id) {
+//     let [item] = items.filter(object=> object.id === +id) //+id converts it into a number
+//     purchasedItems.push(item)
+//     console.log(purchasedItems);
     
-}
+// }
 
-btns.forEach(button => {
-    button.addEventListener('click',(event)=>{
-        addToCart(event.target.value)
-    })
+// btns.forEach(button => {
+//     button.addEventListener('click',(event)=>{
+//         addToCart(event.target.value)
+//     })
+// });
+
+btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        let item = items.find(item => item.id == btn.value);
+        let purchasedItem = purchasedItems.find(pItem => pItem.id == item.id);
+
+        if (purchasedItem) {
+            // If the item is already in purchasedItems, update its price and quantity
+            purchasedItem.price += item.price;
+            purchasedItem.quantity += 1;
+        } else {
+            // If the item is not in purchasedItems, add it to the array
+            purchasedItems.push({ ...item });
+        }
+        console.log(purchasedItems);
+        localStorage.setItem('purchasedItems', JSON.stringify(purchasedItems))
+    });
 });
-
-
 
 
